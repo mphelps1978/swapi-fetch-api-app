@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
+import AddMovie from "./components/AddMovie";
 import "./App.css";
+import Movie from "./components/Movie";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  const addMovieHandler = movie => {
+    console.log(movie);
+  }
 
   const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
@@ -36,24 +42,30 @@ function App() {
   useEffect(() => {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
-  
+
+  // Moving our content returns from the JSX to a single variable for clarity
+  let content = (
+    <p>
+      Nothing to Show here - Try Clicking the button{" "}
+      <span role="img" aria-label="up_arrow" alt="up">
+        ☝
+      </span>
+    </p>
+  );
+  if (movies.length > 0) content = <MoviesList movies={movies} />;
+  if (error) content = <p>{error}</p>;
+  if (isLoading) content = <p>Loading...</p>;
+
   return (
     <React.Fragment>
+      <section>
+        <AddMovie onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
-        {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
-        {!isLoading && movies.length === 0 && !error && (
-          <p>
-            Nothing to Show here - Try Clicking the button{" "}
-            <span role="img" aria-label="up_arrow" alt="up">
-              ☝
-            </span>
-          </p>
-        )}
-        {isLoading && <p>Loading... </p>}
-        {!isLoading && error && <p>{error}</p>}
+        {content}
       </section>
     </React.Fragment>
   );
