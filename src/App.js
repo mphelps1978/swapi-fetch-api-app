@@ -44,7 +44,7 @@ function App() {
   }, [fetchMoviesHandler]);
 
   // Moving our content returns from the JSX to a single variable for clarity
-  let content = (
+  let content = (  // Default value when page loads
     <p>
       Nothing to Show here - Try Clicking the button{" "}
       <span role="img" aria-label="up_arrow" alt="up">
